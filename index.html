@@ -18,11 +18,13 @@ p{color:var(--mu);font-size:14px;line-height:1.8}b{direction:ltr;unicode-bidi:em
 <body>
 <main id="m"><p>شماره نامعتبر است.</p></main>
 <script>
-// شماره فقط در بخش # آدرس است و به هیچ سروری فرستاده نمی‌شود
-(function(){var h=decodeURIComponent(location.hash.slice(1)),m=/^(tel|sms):(\+?\d{4,15})$/.exec(h);if(!m)return;
-var call=m[1]=="tel",el=document.getElementById("m");
-el.innerHTML='<b></b><a id="go"></a><p>اگر '+(call?"شماره‌گیر":"صفحه‌ی پیامک")+' خودکار باز نشد، دکمه‌ی بالا را بزنید.<br>بعد از '+(call?"تماس":"ارسال پیامک")+'، به برنامه‌ی ماژان برگردید تا نتیجه را ثبت کنید.</p>';
-el.querySelector("b").textContent=m[2];var a=document.getElementById("go");a.href=h;a.textContent=call?"تماس با این شماره":"ارسال پیامک";
+// شماره و متن فقط در بخش # آدرس است و به هیچ سروری فرستاده نمی‌شود
+(function(){var h;try{h=decodeURIComponent(location.hash.slice(1))}catch(e){return}var m=/^(tel|sms):(\+?\d{4,15})(\?body=[^#\s]{0,6000})?$/.exec(h);if(!m)return;
+var call=m[1]=="tel",body="";try{body=m[3]?decodeURIComponent(m[3].slice(6)):""}catch(e){}
+var el=document.getElementById("m");
+el.innerHTML='<b></b><a id="go"></a><p id="tx"></p><p>'+(call?"صفحه‌ی شماره‌گیر گوشی با همین شماره باز می‌شود. <br><strong>برای شروع تماس، دکمه‌ی سبز تماس را در شماره‌گیر بزنید.</strong>":"برنامه‌ی پیامک با همین متن باز می‌شود؛ دکمه‌ی ارسال را در آن بزنید.")+'<br>اگر خودکار باز نشد، دکمه‌ی آبی بالا را بزنید.<br>بعد، به برنامه‌ی ماژان برگردید تا نتیجه ثبت شود.</p>';
+el.querySelector("b").textContent=m[2];if(body){var t=document.getElementById("tx");t.textContent="«"+body+"»";t.style.cssText="color:inherit;background:rgba(127,127,127,.12);border-radius:12px;padding:10px"}
+var a=document.getElementById("go");a.href=h;a.textContent=call?"باز کردن شماره‌گیر":"باز کردن پیامک";
 location.replace(h)})();
 </script>
 </body>
