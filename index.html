@@ -19,11 +19,17 @@ p{color:var(--mu);font-size:14px;line-height:1.8}b{direction:ltr;unicode-bidi:em
 <main id="m"><p>شماره نامعتبر است.</p></main>
 <script>
 // شماره و متن فقط در بخش # آدرس است و به هیچ سروری فرستاده نمی‌شود
-(function(){var h;try{h=decodeURIComponent(location.hash.slice(1))}catch(e){return}var m=/^(tel|sms):(\+?\d{4,15})(\?body=[^#\s]{0,6000})?$/.exec(h);if(!m)return;
-var call=m[1]=="tel",body="";try{body=m[3]?decodeURIComponent(m[3].slice(6)):""}catch(e){}
+(function(){var h;try{h=decodeURIComponent(location.hash.slice(1))}catch(e){return}var m=/^(tel|sms|share):(\+?\d{4,15})(\?body=[^#\s]{0,6000})?$/.exec(h);if(!m)return;
+var k=m[1],body="";try{body=m[3]?decodeURIComponent(m[3].slice(6)):""}catch(e){}
 var el=document.getElementById("m");
+if(k=="share"){if(!body)return;el.innerHTML='<b></b><p id="tx"></p><a id="go" href="#">انتخاب پیام‌رسان و ارسال</a><a id="cp" href="#" style="background:transparent;color:var(--ac);border:1px solid var(--ac)">کپی متن</a><p>بعد از ارسال، به برنامه‌ی ماژان برگردید تا نتیجه ثبت شود.</p>';
+el.querySelector("b").textContent=m[2];var t=document.getElementById("tx");t.textContent="«"+body+"»";t.style.cssText="color:inherit;background:rgba(127,127,127,.12);border-radius:12px;padding:10px";
+var cp=function(){if(navigator.clipboard)navigator.clipboard.writeText(body).then(function(){document.getElementById("cp").textContent="متن کپی شد؛ در پیام‌رسان بچسبانید"})};
+document.getElementById("cp").onclick=function(e){e.preventDefault();cp()};
+document.getElementById("go").onclick=function(e){e.preventDefault();if(navigator.share)navigator.share({text:body}).catch(function(){});else cp()};return}
+var call=k=="tel";
 el.innerHTML='<b></b><a id="go"></a><p id="tx"></p><p>'+(call?"صفحه‌ی شماره‌گیر گوشی با همین شماره باز می‌شود. <br><strong>برای شروع تماس، دکمه‌ی سبز تماس را در شماره‌گیر بزنید.</strong>":"برنامه‌ی پیامک با همین متن باز می‌شود؛ دکمه‌ی ارسال را در آن بزنید.")+'<br>اگر خودکار باز نشد، دکمه‌ی آبی بالا را بزنید.<br>بعد، به برنامه‌ی ماژان برگردید تا نتیجه ثبت شود.</p>';
-el.querySelector("b").textContent=m[2];if(body){var t=document.getElementById("tx");t.textContent="«"+body+"»";t.style.cssText="color:inherit;background:rgba(127,127,127,.12);border-radius:12px;padding:10px"}
+el.querySelector("b").textContent=m[2];if(body){var t2=document.getElementById("tx");t2.textContent="«"+body+"»";t2.style.cssText="color:inherit;background:rgba(127,127,127,.12);border-radius:12px;padding:10px"}
 var a=document.getElementById("go");a.href=h;a.textContent=call?"باز کردن شماره‌گیر":"باز کردن پیامک";
 location.replace(h)})();
 </script>
